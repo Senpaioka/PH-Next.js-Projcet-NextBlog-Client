@@ -5,6 +5,7 @@ import {getBlogDetails} from '../../../api/blog-manager';
 import {useAuth} from '../../../hooks/useAuth';
 import { useParams } from "next/navigation";
 import ReactMarkdown from "react-markdown";
+import BookmarkButton from "../../../components/BookmarkButton";
 
 function BlogDetailsPage() {
 
@@ -41,6 +42,11 @@ function BlogDetailsPage() {
 
     return (
         <div className="max-w-4xl mx-auto px-4 md:px-0 py-10">
+        
+        <div className="py-3">
+            <BookmarkButton blogId={id}></BookmarkButton>
+        </div>
+
         {/* Title */}
         <h1 className="text-4xl font-bold mb-4 leading-snug">
             {blog.title}
