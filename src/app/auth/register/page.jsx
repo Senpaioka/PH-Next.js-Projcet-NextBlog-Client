@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../../hooks/useAuth";
-
+import {createUser} from "../../../api/user-manager";
+import { getAuth } from "firebase/auth";
+import {setAuthToken} from '../../../api/setup-cookie';
 
 
 
@@ -11,6 +13,7 @@ function Register() {
 
   const {authenticateWithGoogle, registerWithEmailAndPassword, logoutUser} = useAuth();
   const router = useRouter();
+  const auth = getAuth();
   const [isError, setIsError] = useState("");
   const [formData, setFormData] = useState({
     name: "",
@@ -32,6 +35,8 @@ function Register() {
     try {
       const result = await authenticateWithGoogle();
       if(result?.user) {
+        setAuthToken();
+        await createUser(result.user);
         router.push("/"); 
       }
     }
@@ -47,15 +52,16 @@ function Register() {
     e.preventDefault();
     setIsError("");
     
-    const name = formData.name;
-    const url = formData.image;
-    const email = formData.email;
-    const password = formData.password;
-
+    const { name, image, email, password } = formData;
 
     try {
-        await registerWithEmailAndPassword(name, url, email, password);
-         
+        await registerWithEmailAndPassword(name, image, email, password);
+        const user = auth.currentUser;
+        
+        if(user) {
+          await createUser(user);
+        }
+  
         setFormData({
           name: "",
           image: "",

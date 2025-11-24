@@ -4,6 +4,7 @@ import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut, creat
 import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 import { auth } from "../firebase/firebase.config";
+import {clearAuthToken} from '../api/clear-cookie';
 
 
 
@@ -77,6 +78,7 @@ function AuthProvider({children}) {
         async function logoutUser() {
             try {
                 const exitUser =  await signOut(auth);
+                clearAuthToken();
                 setUser(null);
                 return exitUser;
             }
