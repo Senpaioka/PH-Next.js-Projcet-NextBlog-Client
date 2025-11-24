@@ -3,12 +3,15 @@
 import Link from "next/link";
 import { usePathname } from 'next/navigation'
 import {useAuth} from '../hooks/useAuth';
+import { useRouter } from "next/navigation";
+
 // import Image from "next/image";
 
 function Navbar() {
 
 
     const pathname = usePathname();
+    const router = useRouter();
     const {user, logoutUser} = useAuth();
 
     const navLinks = [
@@ -17,6 +20,12 @@ function Navbar() {
         { name: "Bookmarks", href: "/bookmarks" },
         { name: "Contact", href: "/contact" },
     ];
+
+
+    async function handleUserLogout() {
+        await logoutUser();
+        router.push('/auth/login');
+    }
  
     return (
 
@@ -84,9 +93,9 @@ function Navbar() {
                                     tabIndex="-1"
                                     className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-center">
                                     <li className="text-base font-bold p-1">@ {user.displayName}</li>
-                                    <li><a>Write an Article</a></li>
-                                    <li><a>Published Article</a></li>
-                                    <li onClick={logoutUser}><a className="bg-error text-white">Logout</a></li>
+                                    <li><Link href="/blog">Publish Article</Link></li>
+                                    <li><Link href={`/profile/${user.uid}`}>My Articles</Link></li>
+                                    <li onClick={handleUserLogout}><a className="bg-error text-white">Logout</a></li>
                                 </ul>
                             </div>
 
