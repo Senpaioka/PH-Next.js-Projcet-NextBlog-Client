@@ -2,7 +2,6 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 
 async function createBlog(user, blog_data) {
-
     if (!user) return;
 
     const token = await user.getIdToken();
@@ -60,6 +59,7 @@ async function getArticles() {
 
 
   async function getBlogDetails(user, id) {
+    if(!user) return;
 
     const token = await user.getIdToken();
     
@@ -131,6 +131,55 @@ async function deletePublishBlog(user, id) {
 
 
 
+async function fetchExistingBlogData(user, id) {
+    if(!user) return; 
 
-export {createBlog, getArticles, getBlogDetails, getUserBlogs, deletePublishBlog};
+    const token = await user.getIdToken();
+    
+    try {
+        const response = await fetch(`${BASE_URL}/blog-data/${id}`,{
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+      });
+      
+      return await response.json();
+
+    } catch (error) {
+        console.error("Bad Request", error);
+        throw error;
+    }
+}
+
+
+
+async function updateExistingBlog(user, id, updated_data) {
+  if(!user) return; 
+
+    const token = await user.getIdToken();
+    
+    try {
+        const response = await fetch(`${BASE_URL}/update-blog/${id}`,{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+            ...updated_data,
+        }),
+      });
+      
+      return await response.json();
+
+    } catch (error) {
+        console.error("Bad Request", error);
+        throw error;
+    }
+}
+
+
+
+export {createBlog, getArticles, getBlogDetails, getUserBlogs, deletePublishBlog, fetchExistingBlogData, updateExistingBlog};
 
