@@ -25,7 +25,8 @@ import { NextResponse } from "next/server";
 
 export async function proxy(request) {
   // Read token from cookie
-  const token = request.cookies.get("token")?.value;
+  // const token = request.cookies.get("token")?.value;
+  const token = await request.cookies.get("token")?.value;
 
   if (!token) {
     // redirect to login if token missing
