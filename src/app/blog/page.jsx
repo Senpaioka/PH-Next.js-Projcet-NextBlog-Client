@@ -4,7 +4,7 @@ import { useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import {createBlog} from '../../api/blog-manager';
 import {useAuth} from '../../hooks/useAuth';
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify';
 
 
@@ -16,9 +16,20 @@ function CreateBlog() {
   const [imageUrl, setImageUrl] = useState("");
   const [content, setContent] = useState("");
 
-  const router = useRouter();
+  // const router = useRouter();
 
   async function handlePublish() {
+
+    // Validation
+    if (!title.trim() || 
+        !category.trim() || 
+        !shortDesc.trim() || 
+        !imageUrl.trim() || 
+        !content.trim()) {
+      toast.error("Please fill out all fields before publishing.");
+      return;
+    }
+    
     const blogData = {
       title,
       category,

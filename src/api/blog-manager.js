@@ -82,5 +82,55 @@ async function getArticles() {
 
 
 
-export {createBlog, getArticles, getBlogDetails};
+async function getUserBlogs(user) {
+  if (!user) return null;
+
+  const token = await user.getIdToken();
+
+  try {
+    const response = await fetch(`${BASE_URL}/my-blogs`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+
+    if (!response.ok) {
+      // Optional: automatically handle unauthorized
+      if (response.status === 401 || response.status === 403) {
+        console.warn("Unauthorized: Invalid or expired token");
+        return null;
+      }
+      throw new Error(`Server error: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } 
+  catch (error) {
+    console.error("Error Loading User Blogs:", error);
+    return null;
+  }
+}
+
+
+
+async function deletePublishBlog(user, id) {
+    if(!user) return;
+
+    const token = await user.getIdToken();
+
+      const response = await fetch(`${BASE_URL}/blog/${id}`, {
+        method: "DELETE",
+        headers: {
+        Authorization: `Bearer ${token}`,
+        },
+    });
+
+    return response;
+}
+
+
+
+
+export {createBlog, getArticles, getBlogDetails, getUserBlogs, deletePublishBlog};
 
