@@ -69,6 +69,7 @@ async function getArticles() {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
+            credentials: "include",
       });
       
       return await response.json();
