@@ -3,16 +3,20 @@
 import Link from "next/link";
 import {getArticles} from '../api/blog-manager';
 import { useState, useEffect } from "react";
+import {useLoader} from '../hooks/useLoader';
 
 function HomePage() {
 
+  const {showLoader, hideLoader} = useLoader();
   const [latestBlog, setLatestBlog] = useState([]);
 
 
   useEffect(() => {
     async function fetchLatestBlog(){
       try {
+        showLoader();
         const data = await getArticles();
+        hideLoader();
         // Only take the first 3
         const topThree = data.slice(0, 3);
         setLatestBlog(topThree);

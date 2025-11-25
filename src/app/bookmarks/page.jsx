@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import BlogCard from "../../components/BlogCard";
+import {useLoader} from '../../hooks/useLoader';
 
 function BookmarksPage() {
   const { user } = useAuth();
+  const {showLoader, hideLoader} = useLoader()
   const [bookmarkedBlogs, setBookmarkedBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -13,6 +15,7 @@ function BookmarksPage() {
     if (!user) return;
 
     async function fetchBookmarks() {
+      showLoader();
       try {
         const token = await user.getIdToken();
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/saved-blog`, {
@@ -30,6 +33,7 @@ function BookmarksPage() {
         console.error(error);
       } finally {
         setLoading(false);
+        hideLoader();
       }
     }
 

@@ -4,8 +4,11 @@ import { useState, useEffect } from 'react';
 import { getArticles } from '../../api/blog-manager';
 import BlogCard from '../../components/BlogCard';
 import BlogFilter from '../../components/BlogFilter';
+import {useLoader} from '../../hooks/useLoader';
 
 function Articles() {
+
+  const {showLoader, hideLoader} = useLoader();
   const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([]);
   const [sortBy, setSortBy] = useState('');
@@ -17,15 +20,24 @@ function Articles() {
   const handleSearch = (value) => setSearch(value);
 
   // Fetch blogs
-  useEffect(() => {
-    async function fetchBlogs() {
-      const data = await getArticles();
-      setBlogs(data);
-      setCategories([...new Set(data.map(blog => blog.category))]);
-      setFilteredBlogs(data); // initially show all blogs
-    }
+    useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        showLoader(); // show loader at start
+        const data = await getArticles();
+        setBlogs(data);
+        setCategories([...new Set(data.map(blog => blog.category))]);
+        setFilteredBlogs(data);
+      } catch (error) {
+        console.error("Failed to fetch blogs:", error);
+      } finally {
+        hideLoader(); // always hide loader
+      }
+    };
+
     fetchBlogs();
-  }, []);
+  }, []); 
+
 
   // Filter blogs based on sort and search
   useEffect(() => {
@@ -37,6 +49,7 @@ function Articles() {
 
     Promise.resolve().then(() => setFilteredBlogs(filtered));
   }, [blogs, sortBy, search]);
+
 
   return (
     <div className='w-10/12 mx-auto'>

@@ -6,11 +6,14 @@ import {fetchExistingBlogData, updateExistingBlog} from '../../../api/blog-manag
 import { useAuth } from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
 import { useParams } from "next/navigation";
+import {useLoader} from '../../../hooks/useLoader';
+
 
 function UpdateBlog() {
   const { user } =  useAuth();
   const params = useParams();
   const id = params.blog_id;
+  const {showLoader, hideLoader} = useLoader();
 
   const [loading, setLoading] = useState(true);
 
@@ -26,6 +29,7 @@ function UpdateBlog() {
       if (!user) return; 
 
       try {
+        showLoader();
         const data = await fetchExistingBlogData(user, id);
 
         if (!data) {
@@ -46,6 +50,9 @@ function UpdateBlog() {
         console.error(err);
         toast.error("Failed to load blog");
         setLoading(false);
+      } finally {
+        setLoading(false);
+        hideLoader();
       }
     }
 

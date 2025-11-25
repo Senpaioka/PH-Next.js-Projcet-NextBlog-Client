@@ -4,6 +4,8 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import AuthProvider from '../context/AuthProvider';
 import { ToastContainer, Slide } from 'react-toastify';
+import LoaderProvider from '../spinner/LoaderProvider';
+import GlobalLoader from '../spinner/GlobalLoader';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,11 +26,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <LoaderProvider>
+          <GlobalLoader></GlobalLoader>
           <AuthProvider>
             <Navbar></Navbar>
                 {children}
             <Footer></Footer>
           </AuthProvider>
+        </LoaderProvider>
 
           <ToastContainer
             position="bottom-left"

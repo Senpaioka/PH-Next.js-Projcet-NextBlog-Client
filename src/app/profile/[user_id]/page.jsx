@@ -5,12 +5,14 @@ import {useAuth} from '../../../hooks/useAuth';
 import {getUserBlogs, deletePublishBlog} from '../../../api/blog-manager';
 import WideCard from '../../../components/WideCard';
 import { toast } from "react-toastify";
+import {useLoader} from '../../../hooks/useLoader';
 
 
 
 export default function MyBlogsPage() {
 
   const {user} = useAuth();
+  const {showLoader, hideLoader} = useLoader();
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -20,12 +22,14 @@ useEffect(() => {
 
   async function fetchBlogs() {
     try {
+      showLoader();
       const data = await getUserBlogs(user);
       setBlogs(data || []);
     } catch (error) {
       console.error("Failed to fetch blogs:", error);
     } finally {
       setLoading(false);
+      hideLoader();
     }
   }
 
