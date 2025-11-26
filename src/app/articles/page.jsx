@@ -14,6 +14,9 @@ function Articles() {
   const [sortBy, setSortBy] = useState('');
   const [search, setSearch] = useState('');
   const [filteredBlogs, setFilteredBlogs] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+
 
   // BlogFilter handlers
   const handleSort = (value) => setSortBy(value);
@@ -22,6 +25,7 @@ function Articles() {
   // Fetch blogs
     useEffect(() => {
     const fetchBlogs = async () => {
+      setLoading(true);
       try {
         showLoader(); // show loader at start
         const data = await getArticles();
@@ -32,6 +36,7 @@ function Articles() {
         console.error("Failed to fetch blogs:", error);
       } finally {
         hideLoader(); // always hide loader
+        setLoading(false)
       }
     };
 
@@ -50,6 +55,8 @@ function Articles() {
     Promise.resolve().then(() => setFilteredBlogs(filtered));
   }, [blogs, sortBy, search]);
 
+
+  if (loading) return <p className="text-center p-10 text-xl font-semibold">Loading...</p>
 
   return (
     <div className='w-10/12 mx-auto'>
