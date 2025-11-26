@@ -4,8 +4,6 @@ import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut, creat
 import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 import { auth } from "../firebase/firebase.config";
-import {clearAuthToken} from '../api/clear-cookie';
-// import {setAuthToken} from '../api/setup-cookie';
 
 
 
@@ -78,7 +76,6 @@ function AuthProvider({children}) {
         async function logoutUser() {
             try {
                 const exitUser =  await signOut(auth);
-                clearAuthToken();
                 setUser(null);
                 return exitUser;
             }
@@ -89,22 +86,42 @@ function AuthProvider({children}) {
 
 
     // tracking user
-    useEffect(() => {
-        // on mount
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setIsLoading(true);
-            if(currentUser) {
-                setUser(currentUser);
-                setIsLoading(false);
-            }
-        })
+    // useEffect(() => {
+    //     // on mount
+    //     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    //         setIsLoading(true);
+    //         if(currentUser) {
+    //             setUser(currentUser);
+    //             setIsLoading(false);
+    //         }
+    //     })
 
-        // on unmount
-        return () => {
-            unsubscribe();
+    //     // on unmount
+    //     return () => {
+    //         unsubscribe();
+    //     }
+    // })
+    useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        setIsLoading(true);
+
+        try {
+            if (currentUser) {
+                setUser(currentUser);
+            } else {
+                setUser(null); // 🔥 important for logout or expired session
+            }
+        } catch (err) {
+            console.error("Auth state error:", err);
+        } finally {
+            setIsLoading(false); // 🔥 always stops loading
         }
-    })
-    
+    });
+
+    return () => unsubscribe();
+    }, []);
+
+
     
     // info
     const authInfo = {

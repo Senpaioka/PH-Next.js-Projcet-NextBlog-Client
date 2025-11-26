@@ -7,9 +7,10 @@ import { useAuth } from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
 import { useParams } from "next/navigation";
 import {useLoader} from '../../../hooks/useLoader';
+import PrivateRoute from "../../../context/PrivateRoute";
 
 
-function UpdateBlog() {
+function UpdateBlogPage() {
   const { user } =  useAuth();
   const params = useParams();
   const id = params.blog_id;
@@ -177,4 +178,11 @@ function UpdateBlog() {
   );
 }
 
-export default UpdateBlog;
+export default function UpdateBlog() {
+
+  return (
+    <PrivateRoute>
+      <UpdateBlogPage/>
+    </PrivateRoute>
+  )
+}

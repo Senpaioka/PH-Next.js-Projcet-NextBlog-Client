@@ -93,6 +93,10 @@ function Navbar() {
                                     tabIndex="-1"
                                     className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-center">
                                     <li className="text-base font-bold p-1">@ {user.displayName}</li>
+
+                                    <li>
+                                    <Link href="/profile" className="justify-between">Profile<span className="badge badge-primary">New</span></Link>
+                                    </li>
                                     <li><Link href="/blog">Publish Article</Link></li>
                                     <li><Link href={`/profile/${user.uid}`}>My Articles</Link></li>
                                     <li onClick={handleUserLogout}><a className="bg-error text-white">Logout</a></li>

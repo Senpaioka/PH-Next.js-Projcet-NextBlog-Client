@@ -4,11 +4,11 @@ import { useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import {createBlog} from '../../api/blog-manager';
 import {useAuth} from '../../hooks/useAuth';
-// import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify';
+import PrivateRoute from "../../context/PrivateRoute";
 
 
-function CreateBlog() {
+function CreateBlogForm() {
   const {user} = useAuth();
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -145,4 +145,10 @@ function CreateBlog() {
 }
 
 
-export default CreateBlog;
+export default function BlogCreatePage() {
+  return (
+    <PrivateRoute>
+      <CreateBlogForm />
+    </PrivateRoute>
+  );
+}

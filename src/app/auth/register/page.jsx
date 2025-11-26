@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../../../hooks/useAuth";
 import {createUser} from "../../../api/user-manager";
 import { getAuth } from "firebase/auth";
-import {setAuthToken} from '../../../api/setup-cookie';
 
 
 
@@ -35,7 +34,6 @@ function Register() {
     try {
       const result = await authenticateWithGoogle();
       if(result?.user) {
-        setAuthToken();
         await createUser(result.user);
         router.push("/"); 
       }

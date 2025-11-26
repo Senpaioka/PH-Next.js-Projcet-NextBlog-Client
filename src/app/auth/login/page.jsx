@@ -3,7 +3,6 @@
 import { useState } from "react";
 import {useAuth} from '../../../hooks/useAuth';
 import { useRouter } from "next/navigation";
-import {setAuthToken} from '../../../api/setup-cookie';
 
 
 
@@ -30,7 +29,6 @@ function Login() {
     try {
       const result = await authenticateWithGoogle();
       if(result?.user) {
-        setAuthToken();
         router.push('/');
       }
     }
@@ -52,7 +50,6 @@ function Login() {
     try {
       const result = await loggingInVerifiedUser(email, password);
       if(result?.user) {
-        setAuthToken();
         router.push('/');
       }
     }catch (error) {

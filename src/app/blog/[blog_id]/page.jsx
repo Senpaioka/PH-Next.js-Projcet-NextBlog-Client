@@ -6,8 +6,9 @@ import {useAuth} from '../../../hooks/useAuth';
 import { useParams } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import BookmarkButton from "../../../components/BookmarkButton";
+import PrivateRoute from "../../../context/PrivateRoute";
 
-function BlogDetailsPage() {
+function BlogDetailsPageContent() {
 
     const params = useParams();
     const id = params.blog_id;
@@ -96,4 +97,10 @@ function BlogDetailsPage() {
     );
 }
 
-export default BlogDetailsPage;
+export default function BlogDetailsPage() {
+    return (
+        <PrivateRoute>
+            <BlogDetailsPageContent />
+        </PrivateRoute>
+    );
+}

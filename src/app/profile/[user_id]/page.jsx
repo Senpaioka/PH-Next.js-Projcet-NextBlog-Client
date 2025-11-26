@@ -6,10 +6,11 @@ import {getUserBlogs, deletePublishBlog} from '../../../api/blog-manager';
 import WideCard from '../../../components/WideCard';
 import { toast } from "react-toastify";
 import {useLoader} from '../../../hooks/useLoader';
+import PrivateRoute from "../../../context/PrivateRoute";
 
 
 
-export default function MyBlogsPage() {
+function MyBlogsPageContent() {
 
   const {user} = useAuth();
   const {showLoader, hideLoader} = useLoader();
@@ -92,4 +93,13 @@ useEffect(() => {
 
     </div>
   );
+}
+
+
+export default function MyBlogsPage() {
+  return (
+    <PrivateRoute>
+      <MyBlogsPageContent/>
+    </PrivateRoute>
+  )
 }

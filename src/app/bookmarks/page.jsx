@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import BlogCard from "../../components/BlogCard";
 import {useLoader} from '../../hooks/useLoader';
+import PrivateRoute from '../../context/PrivateRoute'; 
 
-function BookmarksPage() {
+function BookmarksPageContent() {
   const { user } = useAuth();
   const {showLoader, hideLoader} = useLoader()
   const [bookmarkedBlogs, setBookmarkedBlogs] = useState([]);
@@ -59,4 +60,11 @@ function BookmarksPage() {
   );
 }
 
-export default BookmarksPage;
+
+export default function BookmarksPage() {
+  return (
+    <PrivateRoute>
+      <BookmarksPageContent />
+    </PrivateRoute>
+  );
+}
